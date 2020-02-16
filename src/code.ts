@@ -1,30 +1,23 @@
-import { BehaviorSubject } from 'rxjs';
+import { Observable, from } from 'rxjs';
+import { map, pluck } from 'rxjs/operators';
 
-const subject = new BehaviorSubject('First');
+// Observable.create((observer:any) => {
+//     observer.next('Hey guys')
+// }).pipe(
+//     map((val:any) => val.toUpperCase()) // remember there is no . in front of the map
+// ).subscribe((x:any) => addItem(x));
 
-subject.subscribe(
-    data => addItem('Observer 1: ' + data),
-    err => addItem(err),
-    () => addItem('Observer 1 Completed')
-);
-
-subject.next('The first thing has been sent');
-subject.next('...Observer 2 is about to subscribe');
-
-const observer2 = subject.subscribe(
-    data => addItem('Observer 2: ' + data)
-);
-
-subject.next('The second thing has been sent');
-subject.next('The third thing has been sent');
-
-observer2.unsubscribe();
-
-subject.next('The final thing has been sent');
+from([
+    { first: 'Gary', last: 'Simon', age: 34 },
+    { first: 'Jane', last: 'Simon', age: 34 },
+    { first: 'John', last: 'Simon', age: 34 },
+]).pipe(
+    pluck('first')
+).subscribe((name:any) => addItem(name));
 
 function addItem(val:any) {
     var node = document.createElement("li");
     var textnode = document.createTextNode(val);
     node.appendChild(textnode);
     document.getElementById("output").appendChild(node);
-}
+};
